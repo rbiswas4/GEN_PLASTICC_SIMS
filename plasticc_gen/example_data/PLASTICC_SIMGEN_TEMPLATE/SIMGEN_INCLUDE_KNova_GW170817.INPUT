@@ -1,0 +1,23 @@
+
+GENMODEL: $SNDATA_ROOT/models/SIMSED/SIMSED.GW170817_AT2017gfo
+
+SIMSED_USE_BINARY:   0
+#SIMSED_PATH_BINARY:  $PLASTICC_MODELS/SIMSED_BINARIES
+
+# Extinction from WV07 model, with half expon component
+# to approximately account for large kicks.
+WV07_REWGT_EXPAV:  0.5    
+GENRANGE_AV:  0  3    # CCM89 AV-extinctionrange
+
+# Volumetric rate (per yr per Mpc^3) base on
+#  Abbott 2016
+#  https://arxiv.org/abs/1710.05845  (Sec 2.3)
+
+DNDZ: POWERLAW      1.0E-6  0.0    # /yr/MPc^3, no z-dependence
+GENRANGE_REDSHIFT:  0.011   0.28
+
+# ====================================
+# SIMSED GRID PARAMETERS
+# Eqal prob per SED
+
+SIMSED_GRIDONLY:  KNINDEX

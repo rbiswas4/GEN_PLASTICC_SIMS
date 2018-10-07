@@ -1,0 +1,69 @@
+
+# template input file for PLASTIC. XXX indicates quantities
+# which are over-written by the master-input file.
+
+NGENTOT_LC: 250          # XXX
+GENVERSION: RKTEST_BLA   # XXX
+GENSOURCE:  RANDOM   
+GENMODEL:   TRANSIENT
+#2ndARG # see INCLUDE files
+
+#DNDZ:  FLAT    # XXX
+
+SIMLIB_FILE:    $SNDATA_ROOT/simlib/SDSS//SDSS_3year.SIMLIB  # XXX
+#SIMLIB_NREPEAT: 10
+#SIMLIB_MSKOPT:   4  # write epochs for entire season for Trest overlap
+
+SOLID_ANGLE:  0.09  # 300 sqdeg
+
+RANSEED:        123459
+FORMAT_MASK:    32  ! 2=TEXT  32=FITS
+
+GENFILTERS:   ugriz
+KCOR_FILE:    $SNDATA_ROOT/kcor/JLA/kcor_SDSS_AB.fits
+
+# selection criteria for generation
+GENRANGE_PEAKMJD:  53580 54440
+GENRANGE_MJD:      53600 54440
+GENSIGMA_SEARCH_PEAKMJD:  1.0
+
+GENRANGE_REDSHIFT:  0.02   1.20    # XXX
+GENSIGMA_REDSHIFT:  1.0            # no redshift
+GENRANGE_TREST:   -40.0  90.0      # XXX
+
+GENSIGMA_VPEC: 300.0  # peculiar velocity spread without correction, km/sec
+VPEC_ERR:      300.0  # --> no correction
+
+# smear flags: 0=off, 1=on
+SMEARFLAG_FLUX:    1  # photo-stat smearing of signal, sky, etc ...
+SMEARFLAG_ZEROPT:  1  # smear zero-point with zptsig
+
+OPT_MWEBV: 2         # SFD98
+OPT_MWCOLORLAW: 94   # ODonnel94 color law
+
+# 1=> software trigger 3=software & spec trigger
+APPLY_SEARCHEFF_OPT:  1   # 0=calc search eff mask, but do not apply
+SEARCHEFF_PIPELINE_EFF_FILE:  $SNDATA_ROOT/models/searcheff/SEARCHEFF_PIPELINE_SDSS.DAT 
+
+# define pipeline logic for trigger (e.g., 2 detetions)
+SEARCHEFF_PIPELINE_LOGIC_FILE:  $SNDATA_ROOT/models/searcheff/SEARCHEFF_PIPELINE_LOGIC.DAT
+
+SEARCHEFF_SPEC_FILE:  NONE
+SEARCHEFF_zHOST_FILE: NONE
+
+NEWMJD_DIF: 0.004  # to make trigger, 5 min between detections
+
+# cosmological params for lightcurve generation and redshift distribution
+OMEGA_MATTER:  0.3
+OMEGA_LAMBDA:  0.7
+W0_LAMBDA:    -1.00
+H0:           70.0   
+
+
+SIMGEN_DUMPALL:  28
+   CID LIBID SIM_SEARCHEFF_MASK GENTYPE  SNTYPE  NON1A_INDEX
+   ZCMB ZHELIO RA DECL MWEBV MU PEAKMJD MJD_TRIGGER
+   MAGT0_u MAGT0_g MAGT0_r MAGT0_i MAGT0_z
+   SNRMAX_u SNRMAX_g SNRMAX_r SNRMAX_i SNRMAX_z 
+   SNRMAX SNRMAX2 SNRMAX3 NOBS 
+

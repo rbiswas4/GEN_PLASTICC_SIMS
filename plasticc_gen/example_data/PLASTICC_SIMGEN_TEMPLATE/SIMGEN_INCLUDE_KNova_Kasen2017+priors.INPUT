@@ -1,0 +1,43 @@
+# Kasen KN models, with priors:
+#
+# 
+# From Waxman et al., the ejecta mass is ~ 0.05 M_sun, and the original
+# Abbott et al. 2017 paper had between 1e-3 and 1e-2 so reasonably good
+# agreement for that parameter.
+# Between Arcavi et al. 2017 and Metzger et al. 2018, the log10(Xlan) is
+# between -3 and -1.
+
+GENMODEL:  $PLASTICC_MODELS/SIMSED.KNova_Kasen2017
+
+SIMSED_USE_BINARY:   1
+SIMSED_PATH_BINARY:  $PLASTICC_MODELS/SIMSED_BINARIES
+
+# Extinction from WV07 model, with half expon component
+# to approximately account for large kicks.
+WV07_REWGT_EXPAV:  0.5    
+GENRANGE_AV:  0  3    # CCM89 AV-extinctionrange
+
+# Volumetric rate (per yr per Mpc^3) base on
+#  Abbott 2016
+#  https://arxiv.org/abs/1710.05845  (Sec 2.3)
+
+DNDZ: POWERLAW      1.0E-6  0.0    # /yr/MPc^3, no z-dependence
+GENRANGE_REDSHIFT:  0.011   0.28
+
+# ====================================
+# SIMSED GRID PARAMETERS with Guestimated PRIORS
+
+SIMSED_PARAM:   VK
+GENPEAK_VK:     0.1
+GENSIGMA_VK:    1.0E8  1.0E8 
+GENRANGE_VK:    0.03   0.19   # 0.03 0.3
+
+SIMSED_PARAM:      LOGXLAN
+GENPEAK_LOGXLAN:   -3
+GENSIGMA_LOGXLAN:   2   1 
+GENRANGE_LOGXLAN:  -9  -1  
+
+SIMSED_PARAM:     LOGMASS
+GENPEAK_LOGMASS:   -1.3 
+GENSIGMA_LOGMASS:   1  0.3
+GENRANGE_LOGMASS:  -3 -1

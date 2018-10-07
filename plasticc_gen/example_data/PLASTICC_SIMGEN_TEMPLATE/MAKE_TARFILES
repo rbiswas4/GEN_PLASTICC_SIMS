@@ -1,0 +1,14 @@
+CDATE="`date +%Y-%m-%d`"
+tarFile_PLASTICC="PLASTICC_${CDATE}.tar"
+tarFile_SDSS="SDSS_${CDATE}.tar"
+tarFile_IDEAL="IDEAL_${CDATE}.tar"
+
+echo "Create $tarFile_PLASTICC"
+tar -cf $tarFile_PLASTICC  LSST*MODEL*
+
+#echo "Create $tarFile_SDSS"
+#tar -cf $tarFile_SDSS      SDSS*MODEL*
+
+echo "Create $tarFile_IDEAL"
+tar -cf $tarFile_IDEAL     IDEAL*MODEL*
+

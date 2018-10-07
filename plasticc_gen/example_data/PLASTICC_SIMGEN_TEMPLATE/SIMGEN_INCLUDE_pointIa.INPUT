@@ -1,0 +1,23 @@
+# pointIa from Shen et al, 2010
+# May 8 2018: magSmear->0.4 (was 0.6) after removing brightest model.
+
+GENMODEL:  $PLASTICC_MODELS/SIMSED.pointIa_Shen2010
+GENMAG_SMEAR: 0.4     # ARBITRARY coherent smear in all passbands
+GENAV_WV07:   1       # WV07, Eq. 2
+GENRANGE_AV:  0  3    # CCM89 AV-extinctionrange
+
+SIMSED_USE_BINARY:   1
+SIMSED_PATH_BINARY:  $PLASTICC_MODELS/SIMSED_BINARIES
+
+# volumetric rate from [GUESS] ???
+DNDZ:  POWERLAW2  2.6E-7   1.5  0.0 1.0  # R0(1+z)^Beta Zmin-Zmax
+DNDZ:  POWERLAW2  7.35E-7  0.0  1.0 2.0
+GENRANGE_REDSHIFT:  0.011   1.20
+
+# ==============================
+# SIMSED GRID PARAMETERS
+# Equal probability for each SED.
+
+SIMSED_GRIDONLY:   pointIa_INDEX
+
+

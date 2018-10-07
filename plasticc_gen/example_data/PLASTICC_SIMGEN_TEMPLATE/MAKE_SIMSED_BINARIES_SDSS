@@ -1,0 +1,86 @@
+# Create SIMSED binaries to ensure large enough redshift range.
+
+INFILE=SIMGEN_TEMPLATE_SDSS.INPUT
+LOGDIR=$PLASTICC_MODELS/SIMSED_BINARIES
+ARGLIST="GENSIGMA_VPEC 0  NGENTOT_LC 10  GENRANGE_REDSHIFT"
+ZRANGE_SN="0.005   1.55"  # Ia,CC
+ZRANGE_IIn="0.02   2.1"   # IIn (includes SLSN II)
+ZRANGE_KN="0.005   0.30"  # Kilonova
+ZRANGE_SLSN="0.012 3.95"  # SLSN-I
+ZRANGE_PISN="0.012 2.4"   # pair instability
+ZRANGE_TDE="0.004  3.0"   # Tidal Disruption Event (TDE)
+
+echo "Remove existing binaries"
+rm  $PLASTICC_MODELS/SIMSED_BINARIES/SIMSED*SDSS*BINARY
+echo ' '
+echo "Start binary production on z-grid from $zmin to $zmax"
+echo "ARGLIST = $ARGLIST"
+echo ' '
+
+# ------------------------------------
+echo "Re-make binary for pointIa"
+snlc_sim.exe $INFILE \
+  INPUT_FILE_INCLUDE  SIMGEN_INCLUDE_pointIa.INPUT \
+  $ARGLIST $ZRANGE_SN \
+  >& $LOGDIR/MAKE_SIMSED_BINARY_pointIa_SDSS.LOG &
+
+echo "Re-make binary for SLSN_MAGNETAR"
+snlc_sim.exe $INFILE \
+  INPUT_FILE_INCLUDE  SIMGEN_INCLUDE_MOSFIT_SLSN_MAGNETAR.INPUT \
+  $ARGLIST $ZRANGE_SLSN \
+  >& $LOGDIR/MAKE_SIMSED_BINARY_MOSFIT_SLSN_MAGNETAR_SDSS.LOG &
+
+
+echo "Re-make binary for MOSFIT PISN"
+snlc_sim.exe $INFILE \
+  INPUT_FILE_INCLUDE  SIMGEN_INCLUDE_MOSFIT_PISN.INPUT \
+  $ARGLIST $ZRANGE_PISN \
+  >& $LOGDIR/MAKE_SIMSED_BINARY_MOSFIT_PISN_SDSS.LOG
+
+
+# ------------------------------------
+echo "Re-make binary for MOSFIT Ibc"
+snlc_sim.exe $INFILE \
+  INPUT_FILE_INCLUDE  SIMGEN_INCLUDE_MOSFIT_Ibc.INPUT \
+  $ARGLIST $ZRANGE_SN \
+  >& $LOGDIR/MAKE_SIMSED_BINARY_MOSFIT_Ibc_SDSS.LOG &
+
+echo "Re-make binary for IIpca"
+snlc_sim.exe $INFILE \
+  INPUT_FILE_INCLUDE  SIMGEN_INCLUDE_IIpca.INPUT \
+  $ARGLIST $ZRANGE_SN \
+  >& $LOGDIR/MAKE_SIMSED_BINARY_IIpca_SDSS.LOG &
+
+
+echo "Re-make binary for MOSFIT IIn"
+snlc_sim.exe $INFILE \
+  INPUT_FILE_INCLUDE  SIMGEN_INCLUDE_MOSFIT_IIn.INPUT \
+  $ARGLIST $ZRANGE_IIn \
+  >& $LOGDIR/MAKE_SIMSED_BINARY_MOSFIT_IIn_SDSS.LOG
+
+
+echo "Re-make binary for MOSFIT ILOT (Intermed Luminosity Optical Trans)"
+snlc_sim.exe $INFILE \
+  INPUT_FILE_INCLUDE  SIMGEN_INCLUDE_MOSFIT_ILOT.INPUT \
+  $ARGLIST $ZRANGE_SN \
+  >& $LOGDIR/MAKE_SIMSED_BINARY_MOSFIT_ILOT_SDSS.LOG &
+
+echo "Re-make binary for MOSFIT CART (Ca Rich Transients)"
+snlc_sim.exe $INFILE \
+  INPUT_FILE_INCLUDE  SIMGEN_INCLUDE_MOSFIT_CART.INPUT \
+  $ARGLIST $ZRANGE_SN \
+  >& $LOGDIR/MAKE_SIMSED_BINARY_MOSFIT_CART_SDSS.LOG
+
+
+echo "Re-make binary for 91gb"
+snlc_sim.exe $INFILE \
+  INPUT_FILE_INCLUDE  SIMGEN_INCLUDE_91bg.INPUT \
+  $ARGLIST $ZRANGE_SN \
+   >& $LOGDIR/MAKE_SIMSED_BINARY_91bg_SDSS.LOG
+
+echo "Re-make binary for MOSFIT TDE"
+snlc_sim.exe $INFILE \
+  INPUT_FILE_INCLUDE  SIMGEN_INCLUDE_MOSFIT_TDE.INPUT \
+  $ARGLIST $ZRANGE_TDE \
+  >& $LOGDIR/MAKE_SIMSED_BINARY_MOSFIT_TDE_SDSS.LOG
+      

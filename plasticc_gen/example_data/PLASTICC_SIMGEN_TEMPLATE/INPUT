@@ -1,0 +1,4 @@
+MAKE_SIMGEN_MASTER:    -e "/RESET_CIDOFF/a\CIDRAN_MIN: $CIDRAN_MIN_WFD" \
+SIMGEN_MASTER_LSST_DDF.INPUT:RESET_CIDOFF: 2  # flag to generate unique CID for each model
+SIMGEN_MASTER_LSST_WFD.INPUT:#RESET_CIDOFF: 2  # flag to generate unique CID for each model
+SIMGEN_MASTER_XXX.INPUT:# RESET_CIDOFF: 2  # flag to generate unique CID for each model

@@ -1,0 +1,20 @@
+# Pair-Instability SN model (from MOSFIT group)
+
+GENMODEL: $PLASTICC_MODELS/SIMSED.MOSFIT_PISN
+GENAV_WV07:   1       # WV07, Eq. 2
+GENRANGE_AV:  0  3    # CCM89 AV-extinctionrange
+
+SIMSED_USE_BINARY:   1
+SIMSED_PATH_BINARY:  $PLASTICC_MODELS/SIMSED_BINARIES
+
+# Volumetric rate: # arxiv.org/pdf/1111.3648.pdf, Fig 2 
+DNDZ: IPP             # Instability pair production (hide in code)
+#DNDZ: PISN_PLK12     # change to this after challenge
+
+GENRANGE_REDSHIFT:  0.02  2.2
+
+# ==============================
+# SIMSED GRID PARAMETERS
+# Eqal prob per SED
+
+SIMSED_GRIDONLY:  PISN_INDEX

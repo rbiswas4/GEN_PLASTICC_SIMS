@@ -1,0 +1,21 @@
+# Ca Rich Transients (from MOSFIT group)
+
+GENMODEL: $PLASTICC_MODELS/SIMSED.MOSFIT_CART
+GENAV_WV07:   1       # WV07, Eq. 2
+GENRANGE_AV:  0  3    # CCM89 AV-extinctionrange
+
+SIMSED_USE_BINARY:   1
+SIMSED_PATH_BINARY:  $PLASTICC_MODELS/SIMSED_BINARIES
+
+# Volumetric rate
+DNDZ: MD14    2.3E-6  # MD14 SFR(z) with 2.3E-6/yr/Mpc^3 at z=0
+GENRANGE_REDSHIFT:  0.012   1.4
+
+GENRANGE_TREST:   -100.0  500.0
+#GENRANGE_TREST:   -50.0  100.0
+
+# ==============================
+# SIMSED GRID PARAMETERS
+# Eqal prob per SED
+
+SIMSED_GRIDONLY:  Cart_INDEX

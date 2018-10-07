@@ -1,0 +1,66 @@
+# grep 'd^2' SIMSED.*/SIMSED_check.dat | grep Nwarn
+#
+jobname="$SNANA_DEBUG/snana/bin/SIMSED_check.exe"
+argList="-lamrange 3000 11000"
+logFile="SIMSED_check.dat"
+PLASTICC_MODELS=$PLASTICC_MODELS
+delay=30
+
+echo " - - - - - - - - - - - - "
+echo "jobname = $jobname "
+echo "PLASTICC_MODELS = $PLASTICC_MODELS "
+echo "logFile = $logFile "
+echo " - - - - - - - - - - - - "
+echo " "
+
+
+SIMSED_DIR=$PLASTICC_MODELS/SIMSED.MOSFIT_Ibc
+echo $SIMSED_DIR
+$jobname $SIMSED_DIR $argList > $SIMSED_DIR/$logFile &
+sleep $delay
+
+SIMSED_DIR=$PLASTICC_MODELS/SIMSED.MOSFIT_IIn
+echo $SIMSED_DIR
+$jobname $SIMSED_DIR $argList > $SIMSED_DIR/$logFile &
+sleep $delay
+
+SIMSED_DIR=$PLASTICC_MODELS/SIMSED.Iax
+echo $SIMSED_DIR
+$jobname $SIMSED_DIR $argList > $SIMSED_DIR/$logFile &
+sleep 50
+
+SIMSED_DIR=$PLASTICC_MODELS/SIMSED.KNova_Kasen2017
+echo $SIMSED_DIR
+$jobname $SIMSED_DIR $argList > $SIMSED_DIR/$logFile &
+sleep $delay
+
+SIMSED_DIR=$PLASTICC_MODELS/SIMSED.MOSFIT_SLSN_MAGNETAR
+echo $SIMSED_DIR
+$jobname $SIMSED_DIR $argList > $SIMSED_DIR/$logFile &
+sleep $delay
+
+SIMSED_DIR=$PLASTICC_MODELS/SIMSED.MOSFIT_PISN
+echo $SIMSED_DIR
+$jobname $SIMSED_DIR $argList > $SIMSED_DIR/$logFile &
+sleep $delay
+
+SIMSED_DIR=$PLASTICC_MODELS/SIMSED.MOSFIT_ILOT
+echo $SIMSED_DIR
+$jobname $SIMSED_DIR $argList > $SIMSED_DIR/$logFile &
+sleep $delay
+
+SIMSED_DIR=$PLASTICC_MODELS/SIMSED.MOSFIT_CART
+echo $SIMSED_DIR
+$jobname $SIMSED_DIR $argList > $SIMSED_DIR/$logFile &
+sleep $delay
+
+
+SIMSED_DIR=$PLASTICC_MODELS/SIMSED.MOSFIT_TDE
+echo $SIMSED_DIR
+$jobname $SIMSED_DIR $argList > $SIMSED_DIR/$logFile &
+
+
+
+
+
+

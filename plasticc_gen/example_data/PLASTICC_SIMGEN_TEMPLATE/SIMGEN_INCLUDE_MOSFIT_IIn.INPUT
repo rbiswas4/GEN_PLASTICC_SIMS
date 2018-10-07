@@ -1,0 +1,23 @@
+# IIn model (from MOSFIT group)
+
+GENMODEL: $PLASTICC_MODELS/SIMSED.MOSFIT_IIn
+GENAV_WV07:   1       # WV07, Eq. 2
+GENRANGE_AV:  0  3    # CCM89 AV-extinctionrange
+
+SIMSED_USE_BINARY:   1
+SIMSED_PATH_BINARY:  $PLASTICC_MODELS/SIMSED_BINARIES
+
+# S15 rate at z=0 is R0(CC) = 0.7E-4.
+# IIn rate at z=0 from MOSFIT is R0(IIn) = 4E-6
+#  --> IIn fraction is 6%
+
+DNDZ: CC_S15
+DNDZ_ALLSCALE: 0.06 
+
+GENRANGE_REDSHIFT:  0.03 2.0
+
+# ==============================
+# SIMSED GRID PARAMETERS
+# Eqal prob per SED
+
+SIMSED_GRIDONLY:  IIN_INDEX

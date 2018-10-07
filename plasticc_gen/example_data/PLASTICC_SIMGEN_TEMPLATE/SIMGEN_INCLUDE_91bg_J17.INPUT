@@ -1,0 +1,14 @@
+GENMODEL:   NON1ASED
+DNDZ_PEC1A:  POWERLAW 3.0E-6 1.5   # 3E-6/yr/Mpc^3 x (1+z)^1.5
+GENRANGE_REDSHIFT:  0.011  1.2
+
+# ----------------------------------------- 
+#   January 26, 2017 (D. Jones) - see arXiv: 1611.07042
+#   added 4 Ia-91bg templates: 1991bg (Nugent), 1998de, 1999by, 2005bl
+
+NON1A_KEYS: 5 
+         INDEX   WGT    MAGOFF   MAGSMEAR  SNTYPE 
+PEC1A:    502   0.25   -17.447     0.5250     42    # Ia-91bg  (Nugent)
+PEC1A:    503   0.25    -0.030     0.5250     42    # Ia-91bg  (LOWZ-1999by)
+PEC1A:    506   0.25    -0.030     0.5250     42    # Ia-91bg  (LOWZ-1998de)
+PEC1A:    509   0.25    -0.030     0.5250     42    # Ia-91bg  (LOWZ-2005bl)
