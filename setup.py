@@ -3,7 +3,7 @@ import sys
 import os
 import re
 
-PACKAGENAME = 'build_snana_inputs'
+PACKAGENAME = 'gen_plasticc'
 packageDir = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                           PACKAGENAME)
 
@@ -26,13 +26,12 @@ print(genRequirements)
 setup(# package information
       name=PACKAGENAME,
       version=__version__,
-      description='simple repo to build snana inputs',
+      description='Gennerate PLAsTiCC simulations for an LSST cadence',
       long_description=''' ''',
       # What code to include as packages
       packages=[PACKAGENAME],
-      packagedir={PACKAGENAME: 'build_snana_inputs'},
+      packagedir={PACKAGENAME: 'gen_plasticc'},
       # What data to include as packages
       include_package_data=True,
-      package_data={PACKAGENAME:['data/*.INPUT',
-                                 'data/*.md']}
+      package_data={PACKAGENAME:['example_data/PLASTICC_SIMGEN_TEMPLATE/*']}
       )

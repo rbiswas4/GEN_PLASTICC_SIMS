@@ -1,13 +1,10 @@
-# INPUT FILES FOR SNANA simulations of LSST on MIDWAY
+# INPUT FILES FOR SNANA simulations of PLAsTiCC.
 
-These are input files used on midway to produce LSST simulations for the WFD and DDF fields for 10 years on midway. The contents, usage and evolution of these files is explained below.
+These are input files used on midway to produce PLAsTiCC simulations for the WFD and DDF fields for 10 years for a cadence specified through a simlib. The contents, usage and evolution of these files is explained below.
 
 ## CONTENTS
-These files are in the [data directory](./build_snana_inputs) and have the following:
+A set of files in the [example_data directory](./gen_plasticc/example_data) and include the directory `PLASTICC_SIMGEN_TEMPLATE`.
 
-1. SIMGEN_MASTER_LSST_DDF_Y10.INPUT : Master input file for `LSST_DDF`
-2. SIMGEN_MASTER_LSST_WFD_Y10.INPUT : Master input file for `LSST_WFD` 
-3. SIMGEN_SALT2_POPCHAR.INPUT : Input file describing Ia (SALT Model) population
 
 ## Usage in SNANA
 To use these files, a user should change the GENVERSION on the `SIMGEN_MASTER_LSST_DDF_Y10.INPUT` and `SIMGEN_MASTER_LSST_WFD_Y10.INPUT`. The minimal change required is to change `USERNAME_` to a name that identifies a user.  
