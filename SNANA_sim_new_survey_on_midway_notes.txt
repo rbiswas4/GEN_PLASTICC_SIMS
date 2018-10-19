@@ -1,0 +1,293 @@
+-------------------------------------------------------------
+NOTES ON SIMULATING A NEW SURVEY WITH SNANA + PLASTICC MODELS
+
+            (aka learn arcane SNANA sorcery)
+-------------------------------------------------------------
+
+Written by Gautham Narayan (gnarayan@stsci.edu), 20180711, based on a tutorial
+with Richard Kessler (kessler@kicp.uchicago.edu)
+
+These detail work to get ZTF cadence simulations using SNANA + PLASTICC MODELS
+The notes mostly use ZTF instead of just <SURVEY> for clarity, and so I can
+copy and paste the command. Adapt to your favorite survey as needed.
+
+----------------------------------------------------------
+0) get access to Midway
+
+Go here and request account
+https://rcc.uchicago.edu/accounts-allocations/general-user-account-request
+PI -> pi-rkessler
+
+(takes ~1 day)
+
+0.1) Add to .bashrc:
+umask 002
+source /project/rkessler/PRODUCTS/SNANA/SNANA_setup.sourceme
+
+**********************************************************
+0.2) WARNINGS ABOUT USAGE
+- upload data directly to project space
+- DO NOT UPLOAD DATA INTO HOME DIRECTORY - GETS WRONG GID
+If you do, make sure you 
+chgrp pi-rkessler <file>
+
+OMG never do ls in $SNDATA_ROOT/SIM
+eleventy billion directories! 
+**********************************************************
+
+----------------------------------------------------------
+1) Setup survey conditions - filters, cadence model.
+
+These are <SURVEY>_ROOT
+filters/ simlibs/
+simlib file goes in simlib - see SNANA manual for format.
+
+How you generate this simlib file is fairly key, and seems like it could use a
+README of it's own.
+
+I've created this repo to document what I did for ZTF:
+https://github.com/gnarayan/ztf_simlib
+
+Rahul Biswas has a much more complex bit of code for LSST/PLAsTiCC.
+This has a lot of example notebooks and things to make diagnostic plots etc. 
+https://github.com/rbiswas4/OpSimSummary
+
+I suggest creating the simlib, validating it with Rahul's repo code, and then
+making sure that SNANA actually likes it.
+
+filters files go in <SURVEY>_ROOT/filters/
+    filter format is wave(A) trans
+use some versioning for the filters - I used <DATE> = 20180711
+
+----------------------------------------------------------
+1.1) Once simlib is uploaded, simlib SURVEY entry must be defined in SURVEY.DEF
+
+Name must exactly mirror the name in the SURVEY field of the SIMLIB
+Assign some unused integer ID to the survey
+
+----------------------------------------------------------
+2) Create a kcor dir to store calibration data.
+
+mkdir <SURVEY>_ROOT/kcor
+
+Mirror filter versioning in kcor
+copy .input file to kcor directory and edit
+run command at top of kcor.exe -  very fast - pipe output to log
+check log file for sanity
+
+----------------------------------------------------------
+3) Define survey search efficiency and trigger cuts
+
+mkdir <SURVEY>_ROOT/models/searcheff/
+
+or just mirror this from LSST_ROOT/models/search_eff
+
+need two files:
+SEARCHEFF_PIPELINE_LSST.DAT
+and 
+SEARCHEFF_PIPELINE_LOGIC.DAT
+
+edit these files: 
+first is in the form of ABS(SNR) : efficiency
+can be replaced by SNR: efficiency if you don't trigger on negative flux detections
+
+Second needs to define the trigger logic 2 detections in any bands etc.
+
+----------------------------------------------------------
+4)  Define model parameters for simulation
+
+need input files - defines the settings for each model, simulation as a whole.
+
+copy $PLASTIC_ROOT/SIMGEN/*INPUT files to $ZTF_USERS/gnarayan/
+
+a) SIMGEN_TEMPLATE_LSST.INPUT   - defines parameters common to all models
+b) SIMGEN_INCLUDE_SALT2.INPUT   - defines parameters specific to a single model (SALT2 in this case - generally it looks like INCLUDE == model specific)
+c) SIMGEN_MASTER_ZTF_MSIP.INPUT - defines overrides per model + prescale + ngentot_LC + location of model specific input files etc
+
+
+Notes:
+There are INCLUDE*<MODE>*.INPUT files that exist but are not used for anything anymore
+This last file is necessary for non-interactive processing, but not for running things are the prompt.
+
+I moved model specific files into SIMGEN subdir to keep them separate from
+simulation input files. They're all part of the simulation generation, but it
+makes sense in my head to diffrentiatie the survey from the astrophysical
+class.
+
+
+**** THESE FILES NEEDS A LOT OF EDITING. ****
+a) 
+SIMGEN_TEMPLATE_LSST.INPUT - defines parameters common to all models
+
+if running non-batch, include INPUT_FILE_INCLUDE to point to the model SIMGEN_INCLUDE_<MODELNAME>.INPUT
+other keys to edit:
+GENVERSION: where your output goes.. use your initials in name so that it's easy to find your work in $SNDATA_ROOT/SIM/
+SIMLIB_FILE
+KCOR_FILE
+GENRANGE_PEAKMJD: - must match SIMLIB file range
+GENFILTERS
+GENRANGE_MJD - must match SIMLIB file and necessary for galactic models that do not have a tmax
+GENRANGE_REDSHIFT
+SEARCHEFF_PIPELINE_LOGIC_FILE
+SEARCHEFF_PIPELINE_EFF_FILE
+SEARCHEFF_SPEC_FILE
+CUTWIN_NOBS_NSATURATE
+NEWMJD_DIF
+SIMGEN_DUMPALL: number of parameters
+parameters can only include filters that are being generated.
+
+NGENTOT_LC = how many to generate
+NGEN_LC = how many to generate after cuts (risky - can get into infinite loops - do not use)
+
+----
+
+b) parameters for each model, path to SIMSED binary (for SIMSED models, not LCLIB models - see 6.)
+**** GENRANGE_REDSHIFT - see additional note here in 6) ****
+
+----
+
+c) "Master" file for the simulation - how to batch submit jobs, model specific overrides
+BATCH_INFO:  sbatch  $SBATCH_TEMPLATES/SBATCH_sandyb.TEMPLATE 40
+
+Controls how jobs are submitted on midway + number of jobs (40)
+This is an sbatch script template.
+Should be straightforward to adapt to PBS or SGE
+
+[gnarayan@midway-login1 gnarayan]$ cat $SBATCH_TEMPLATES/SBATCH_sandyb.TEMPLATE
+#!/bin/bash
+
+#SBATCH --partition=sandyb
+#SBATCH --account=pi-rkessler
+#SBATCH --job-name=REPLACE_NAME
+#SBATCH --output=REPLACE_LOGFILE
+#SBATCH --time=24:00:00
+#SBATCH --nodes=1
+#SBATCH --mem-per-cpu=REPLACE_MEM
+#SxxxxBATCH --exclusive
+#SxxxxBATCH --ntasks-per-node=1
+
+echo $SLURM_JOB_ID starting execution `date` on `hostname`
+
+REPLACE_JOB
+
+
+**** IMPORTANT OPTION ****
+PATH_SNDATA_SIM:  $SCRATCH_SIMDIR
+
+Writes simulations to scratch area instead of Rick's area:
+
+`quota` gives you status of your personal scratch.
+
+---------------------------------------------------------------------------
+fileset          type                   used      quota      limit    grace
+---------------- ---------------- ---------- ---------- ---------- --------
+home             blocks (user)        64.00K     30.00G     35.00G     none
+                 files  (user)            18     500000    1000000     none
+scratch          blocks (user)       477.50M    100.00G      5.00T     none
+                 files  (user)          4780   10000000   20000000     none
+---------------- ---------------- ---------- ---------- ---------- --------
+>>> Capacity Filesystem: project (GPFS)
+---------------- ---------------- ---------- ---------- ---------- --------
+rkessler         blocks (group)        1.93T      2.46T      2.71T     none
+                 files  (group)       871054     878600     966460     none
+---------------------------------------------------------------------------
+
+On midway you get 100G and they will not yell.
+5T grace for large jobs
+3w grace to get back to under quota (100G)
+After that, no more write access until you get below limit.
+
+
+Finally, each model to simulate has an entry in MASTER file
+
+# Type Ia SN
+GENVERSION: ZTF_MSIP_MODEL01
+GENOPT: INPUT_FILE_INCLUDE $ZTF_USERS/gnarayan/SIMGEN/SIMGEN_INCLUDE_SALT2.INPUT
+GENOPT: GENRANGE_REDSHIFT 0.01 0.5
+GENOPT: GENTYPE 1
+GENOPT: SIMGEN_DUMP_PRESCALE 1
+GENOPT: NGENTOT_LC 1000
+
+**** AGAIN, SEE NOTE IN 6) ABOUT GENRANGE_REDSHIFT ****
+
+NOTE THAT EACH OF THE 40 JOBS CREATES NGENTOT_LC = 1000 objects, so 40x1000 =
+40,000 simmed. Tweak up or down as needed with PRESCALE.
+
+----------------------------------------------------------
+5) Run a single model simulation
+
+# single model
+snlc_sim.exe  SIMGEN_TEMPLATE_ZTF.INPUT GENRANGE_REDSHIFT .0062 .064 NGENTOT_LC 500 >& DUM.LOG
+
+This was using a near delta function in redshift so I can compare against a known existing SN.
+Create some delta function in redshift models to make sure the simulations look like the data
+
+----------------------------------------------------------
+6) Make binaries to speed up bulk simulation
+
+To speed up model generation, instead of reading either FITS or text, SNANA can
+output some binary files for each model.  There's binaries that are survey
+specific and model specific. Both need to be generated as you change settings.
+These are not portable across machines, and if filters or surveys or settings
+change, different binaries must be generated and used.
+
+These binaries are in:
+/project/rkessler/SURVEYS/LSST/ROOT/PLASTICC/garbage/SIMSED_BINARIES
+
+to make these binaries, we have to run a script ourselves:
+
+cp $PLASTICC_ROOT/SIMGEN/MAKE_SIMSED_BINARIES_LSST $ZTF_USERS/gnarayan/MAKE_SIMSED_BINARIES_ZTF
+
+Edit this file
+ZRANGE for each model
+input files must point to the input files that were copied and edited in 4)
+**** WARNING: SIMGEN_INCLUDE_<MODEL>.INPUT GENRANGE_REDSHIFT MUST BE WITHIN ZMIN, ZMAX OF BINARIES **** 
+**** NO, REALLY - WITHIN - INCLUDING WITH PECULIAR VELOCITY - ADJUST ZMAX IN INPUT FILES TO BE LESS THAT ZMAX OF BINARY ****
+
+When done editing:
+./MAKE_SIMSED_BINARIES_ZTF
+
+You should see some output like this:
+
+Start binary production on z-grid from  to
+ARGLIST = GENSIGMA_VPEC 0  NGENTOT_LC 10  GENRANGE_REDSHIFT
+
+Re-make binary for pointIa
+Re-make binary for SLSN_MAGNETAR
+Re-make binary for MOSFIT PISN
+Re-make binary for MOSFIT Ibc
+Re-make binary for IIpca
+Re-make binary for MOSFIT IIn
+Re-make binary for MOSFIT ILOT (Intermed Luminosity Optical Trans)
+Re-make binary for MOSFIT CART (Ca Rich Transients)
+Re-make binary for 91gb
+Re-make binary for Iax
+Re-make binary for MOSFIT TDE
+Re-make binary for KN models, Kasen 2017
+
+This takes ~1min per 3 models or so. 
+
+----------------------------------------------------------
+7) Generate a mixture of several models:
+sim_SNmix.pl SIMGEN_MASTER_ZTF_MSIP.INPUT  >& SIM_ZTF_TEST.log
+
+You can use the option NOSUBMIT for a dry run.
+
+If everything works, output will go where you set it in MASTER input.
+logfiles go to $ZTF_USERS/gnarayan/SIMLOGS_ZTF_MSIP/
+
+ls *ABORT* in the log dir to check if failures
+ls *DONE in the log dir to check if jobs finished
+while executing, you will find
+TMP_<first four letters of username>_<GENVERSION>_MODEL??-<%04 JOBNUM>_<SECONDS AFTER MIDNIGHT INT>_NONIa.LOG
+e.g. TMP_gnar_ZTF_MSIP_MODEL01-0001_55271_NONIa.LOG 
+
+These go away if the files are all sucessfully merged after jobs are done.
+
+output goes to $SCRATCH_SIMDIR/ZTF_MSIP_MODEL??/
+
+You can do something like:
+cd $SCRATCH_SIMDIR
+find . -type f -name 'ZTF_MSIP_MODEL*README' -exec tail -n1 {} \; | sort
+
+to get a summary of the simulation
