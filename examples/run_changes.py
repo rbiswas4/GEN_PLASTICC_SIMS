@@ -17,12 +17,19 @@ if __name__ == '__main__':
     parser.add_argument('--pathtodir', type=str,
                         help='absolute path to directory where we want to have plasticc inputs', 
                         default='./plasticc_sims_test') 
+    parser.add_argument('--opsimname', type=str, help='name for OpSim run used in GENVERSION, eg. "kraken_2026"', 
+                        default='kraken_2026')
+    parser.add_argument('--wfd_simlibpath', type=str, help='absolute path to the wfd simlib', 
+                        default='/project/rkessler/SURVEYS/LSST/ROOT/simlibs/cwp/kraken_2026_wfd.simlib.COADD')
+    parser.add_argument('--ddf_simlibpath', type=str, help='absolute path to the ddf simlib', 
+                        default='/project/rkessler/SURVEYS/LSST/ROOT/simlibs/cwp/kraken_2026_ddf.simlib.COADD')
 
 
     args = parser.parse_args()
     loc = args.pathtodir
-    opsimname = 'kraken_2026'
-    simlib_path = '/Users/rbiswas/data/LSST/OpSimData/kraken_2026_WFD.simlib.COADD'
+    opsimname = args.opsimname
+    wfd_simlib_path = args.wfd_simlibpath
+    ddf_simlib_path = args.ddf_simlibpath
 
     # copy the template to pathdir
     copy_template_to(loc)
@@ -51,8 +58,9 @@ if __name__ == '__main__':
     out_file = os.path.join(loc, 'SIMGEN_MASTER_XXX.INPUT')
     with open(template_file, 'r') as f:
         data = f.read()
-        data.replace('XXXOPSIM', opsimname)
-        data.replace('SIMLIB_PATH', simlib_path)
+    print(data.count('XXXOPSIM'))
+    data = data.replace('XXXOPSIM', opsimname)
+    print(data.count('XXXOPSIM'))
     with open(out_file, 'w') as g:
         g.writelines(data)
 
@@ -62,5 +70,17 @@ if __name__ == '__main__':
 
 
     # Change the solid angle in the WFD and DDF inputs (alternatively, we could have changed them in the bash script)
-    # change GENOPT_GLOBAL: SIMLIB_FILE $LSST_ROOT/simlibs/minionv4_1016_XXXSURVEY.simlib.COADD SOLID_ANGLE XXXSOLIDANGLE  SEARCHEFF_zHOST_FILE $PLASTICC_ROOT/SIMGEN/SEARCHEFF_zHOST_PLASTICC_XXXSURVEY.DAT
-    # fname = os.path.join(dirname, 'SIMGEN_MASTER_XXX.INPUT') 
+    templatefile = os.path.join(loc, 'SIMGEN_MASTER_LSST_WFD.INPUT')
+    with open(templatefile, 'r') as f:
+        data = f.read()
+    data = data.replace('SIMLIB_PATH', wfd_simlib_path)
+    with open(templatefile, 'w') as f:
+        f.writelines(data)
+
+    # Change the solid angle in the WFD and DDF inputs (alternatively, we could have changed them in the bash script)
+    templatefile = os.path.join(loc, 'SIMGEN_MASTER_LSST_DDF.INPUT')
+    with open(templatefile, 'r') as f:
+        data = f.read()
+    data = data.replace('SIMLIB_PATH', ddf_simlib_path)
+    with open(templatefile, 'w') as f:
+        f.writelines(data)
