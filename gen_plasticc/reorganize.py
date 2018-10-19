@@ -1,21 +1,26 @@
 from __future__ import division, absolute_import, print_function
 
-__all__ = ['copy_template_to']
+__all__ = ['copy_template_to', 'execute_bashscript']
 
 import os
 import shutil
 from . import example_data
 import subprocess
 
-def execute_bashscript(script):
+def execute_bashscript(script, loc=None):
     """
     Parameters
     ---------
     script : string, mandatory
         absolute path to script to execute
     """
+    if loc is not None:
+        cwd = os.getcwd()
+        os.chdir(loc)
     bash_cmd = 'bash ' + script
     res = subprocess.call(bash_cmd, shell=True)
+    if loc is not None:
+        os.chdir(cwd)
     return res
 
 def modify_template_file(fname, changes):
@@ -29,7 +34,7 @@ def modify_template_file(fname, changes):
     change_string = data
     return changed_string
 
-def copy_template_to(location, dirname, create_path=False, clobber=False,
+def copy_template_to(abs_path, create_path=False, clobber=False,
                      template_dir=None):
     """
     Copies a template directory to a new directory within a given location,
@@ -38,10 +43,8 @@ def copy_template_to(location, dirname, create_path=False, clobber=False,
 
     Parameters
     ----------
-    location : string, mandatory
+    abs_path : string, mandatory
         location of directory
-    dirname :
-        name of directory. ie location/directory will be the final path 
 
     create_path : Not implemented
 
@@ -53,7 +56,6 @@ def copy_template_to(location, dirname, create_path=False, clobber=False,
     template_dir : if None, `example_data/PLASTICC_SIMGEN_TEMPLATE`
 
     """
-    dst = os.path.join(location, dirname)
 
     if clobber:
         raise NotImplementedError('Have not implemented clobber yet')
@@ -64,6 +66,7 @@ def copy_template_to(location, dirname, create_path=False, clobber=False,
     if template_dir is None:
         template_dir =  os.path.join(example_data, 'PLASTICC_SIMGEN_TEMPLATE')
 
-    shutil.copytree(template_dir, dst)
+    shutil.copytree(template_dir, abs_path)
+    print(abs_path)
 
-    return template_dir, dst
+    return template_dir, abs_path
