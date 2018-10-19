@@ -26,6 +26,21 @@ to create the directory
 Currently, there is an unfortunate step required, putting in the solid angle by hand. (This will be changed later, if someone would like to do so (great!), please talk to @rbiswas4 first). One should look at the header of the simlib file which will include the sky area in solid angles. This should be used to replace a line like:
 `GENOPT_GLOBAL: SIMLIB_FILE /project/rkessler/SURVEYS/LSST/ROOT/simlibs/cwp/kraken_2026_wfd.simlib.COADD SOLID_ANGLE 5.468      SEARCHEFF_zHOST_FILE $PLASTICC_ROOT/SIMGEN/SEARCHEFF_zHOST_PLASTICC_WFD.DAT` in the  
 `SIMGEN_MASTER_LSST_WFD.INPUT` file. 
+
+After this, we should got to  the pathtodir, 
+```
+cd /project/rkessler/SURVEYS/LSST/USERS/CWP/kraken_2026
+sim_SNmix.pl SIMGEN_MASTER_LSST_WFD.INPUT FAST100
+```
+The results should be in 
+```
+$SCRATCH_SIMDIR/CWP/
+```
+If this runs correctly, we should run this with 
+```
+sim_SNmix.pl SIMGEN_MASTER_LSST_WFD.INPUT
+```
+At the end of the run, all output should be collected from the ouptut directory and put into a suitabe folder
 ## TO BE CHECKED LATER
 
 # INPUT FILES FOR SNANA simulations of PLAsTiCC.
