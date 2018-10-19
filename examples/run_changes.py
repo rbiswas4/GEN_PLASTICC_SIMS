@@ -1,12 +1,13 @@
 import os
 from  gen_plasticc import copy_template_to
 
+
 location = '/Users/rbiswas/tmp'
 dirname =  'pdir'
 
-copy_template_to(location, dirname)
-
+# Copy the PLASTICC_SIMGEN_TEMPLATE Directory to a new location 
 dirname = os.path.join(location, dirname)
+copy_template_to(location, dirname)
 
 # Modify `SIMGEN_TEMPLATE_LSST.INPUT` if necessary to change 
 ## What needs to be changed: (the range of peakmjd needs to match the simlib range
