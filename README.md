@@ -1,3 +1,33 @@
+# DESCRIPTION
+
+This repository puts together some tools preparing inputs for SNANA simulations of PLASTICC. It is available in a [private repository](https://github.com/rbiswas4/GEN_PLASTICC_SIMS) (only to keep plasticc information secret during the kaggle challenge) and installed on midway at `/project/rkessler/SURVEYS/LSST/USERS/CWP/PLASTICC_GEN`. 
+# INSTALL
+
+In the top level run
+
+```python setup.py install --user
+```
+
+## HOW to RUN:
+Currently, there is a script in the directory `examples` 
+`examples/run_changes.py` 
+To obtain the inputs do 
+```
+cd examples
+python run_changes.py -h
+```
+As an example, I ran
+```
+python run_changes.py --pathtodir /project/rkessler/SURVEYS/LSST/USERS/CWP/kraken_2026 --wfd_simlibpath /project/rkessler/SURVEYS/LSST/ROOT/simlibs/cwp/kraken_2026_wfd.simlib.COADD --ddf_simlibpath /project/rkessler/SURVEYS/LSST/ROOT/simlibs/cwp/kraken_2026_ddf.simlib.COADD
+```
+to create the directory 
+`/project/rkessler/SURVEYS/LSST/USERS/CWP/kraken_2026`
+
+Currently, there is an unfortunate step required, putting in the solid angle by hand. (This will be changed later, if someone would like to do so (great!), please talk to @rbiswas4 first). One should look at the header of the simlib file which will include the sky area in solid angles. This should be used to replace a line like:
+`GENOPT_GLOBAL: SIMLIB_FILE /project/rkessler/SURVEYS/LSST/ROOT/simlibs/cwp/kraken_2026_wfd.simlib.COADD SOLID_ANGLE 5.468      SEARCHEFF_zHOST_FILE $PLASTICC_ROOT/SIMGEN/SEARCHEFF_zHOST_PLASTICC_WFD.DAT` in the  
+`SIMGEN_MASTER_LSST_WFD.INPUT` file. 
+## TO BE CHECKED LATER
+
 # INPUT FILES FOR SNANA simulations of PLAsTiCC.
 
 These are input files used on midway to produce PLAsTiCC simulations for the WFD and DDF fields for 10 years for a cadence specified through a simlib. The contents, usage and evolution of these files is explained below.
