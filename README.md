@@ -5,7 +5,8 @@ This repository puts together some tools preparing inputs for SNANA simulations 
 
 In the top level run
 
-```python setup.py install --user
+```
+python setup.py install --user
 ```
 
 ## HOW to RUN:
