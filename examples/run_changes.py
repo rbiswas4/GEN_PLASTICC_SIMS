@@ -82,5 +82,7 @@ if __name__ == '__main__':
     with open(templatefile, 'r') as f:
         data = f.read()
     data = data.replace('SIMLIB_PATH', ddf_simlib_path)
+    data = data.replace('SIMLIB_MSKOPT:   256  # write every survey observation',
+                        'SIMLIB_MSKOPT:   128  # write every observation in seasons overlapping LC')
     with open(templatefile, 'w') as f:
         f.writelines(data)

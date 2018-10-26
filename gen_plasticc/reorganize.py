@@ -48,7 +48,7 @@ def copy_template_to(abs_path, create_path=False, clobber=False,
 
     create_path : Not implemented
 
-    clobber : False, 
+    clobber : False,
         Not implemented as true
         if True, and dirname exists as location/dirname, remove the directory
         dirname
