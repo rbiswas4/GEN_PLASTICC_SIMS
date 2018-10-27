@@ -26,7 +26,8 @@ GENMODEL:   TRANSIENT
 #DNDZ:  FLAT    # XXX
 
 SIMLIB_FILE:    $LSST_ROOT/simlibs/minionv4_1016_DDF.simlib.COADD # XXX
-SIMLIB_MSKOPT:   256  # write every survey observation
+# SIMLIB_MSKOPT:   256  # write every survey observation
+SIMLIB_MSKOPT:   128   # write every observation in seasons overlapping LC
 SIMLIB_MINSEASON: 30  # remove seasons < 30 days 
 
 # realistic photo-z library from Graham 2018.
