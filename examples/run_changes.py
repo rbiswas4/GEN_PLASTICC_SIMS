@@ -1,6 +1,7 @@
 import os
 from argparse import ArgumentParser
 from  gen_plasticc import copy_template_to, execute_bashscript
+import gen_plasticc
 
 
 
@@ -13,6 +14,7 @@ from  gen_plasticc import copy_template_to, execute_bashscript
 
 if __name__ == '__main__':
 
+    print('using gen_plasticc version', gen_plasticc.__version__)
     parser = ArgumentParser(description='Generate inputs for PLASTICC sims')
     parser.add_argument('--pathtodir', type=str,
                         help='absolute path to directory where we want to have plasticc inputs', 
