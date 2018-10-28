@@ -9,7 +9,7 @@ In the top level run
 python setup.py install --user
 ```
 
-## HOW to RUN:
+## HOW to RUN gen_plasticc scripts to create the appropriate SNANA inputs:
 Currently, there is a script in the directory `examples` 
 `examples/run_changes.py` 
 To obtain the inputs do 
@@ -19,16 +19,22 @@ python run_changes.py -h
 ```
 As an example, I ran
 ```
-python run_changes.py --pathtodir /project/rkessler/SURVEYS/LSST/USERS/CWP/kraken_2026 --wfd_simlibpath /project/rkessler/SURVEYS/LSST/ROOT/simlibs/cwp/kraken_2026_wfd.simlib.COADD --ddf_simlibpath /project/rkessler/SURVEYS/LSST/ROOT/simlibs/cwp/kraken_2026_ddf.simlib.COADD
+python run_changes.py --pathtodir /project/rkessler/SURVEYS/LSST/USERS/CWP/kraken_2026 --wfd_simlibpath /project/rkessler/SURVEYS/LSST/ROOT/simlibs/cwp/kraken_2026_wfd.simlib.COADD --ddf_simlibpath /project/rkessler/SURVEYS/LSST/ROOT/simlibs/cwp/kraken_2026_ddf.simlib.COADD --opsimname kraken_2026
 ```
-to create the directory 
-`/project/rkessler/SURVEYS/LSST/USERS/CWP/kraken_2026`
+This works in the following way:
+`--pathtodir` argument creates the directory  `/project/rkessler/SURVEYS/LSST/USERS/CWP/kraken_2026` where the inputs will be placed.
+`--opsimname` is a string to describe the cadence strategy,  eg. `kraken_2026`. This is used to replace the GENVERSION name to reflect this cadence.
+
 
 Currently, there is an unfortunate step required, putting in the solid angle by hand. (This will be changed later, if someone would like to do so (great!), please talk to @rbiswas4 first). One should look at the header of the simlib file which will include the sky area in solid angles. This should be used to replace a line like:
 `GENOPT_GLOBAL: SIMLIB_FILE /project/rkessler/SURVEYS/LSST/ROOT/simlibs/cwp/kraken_2026_wfd.simlib.COADD SOLID_ANGLE 5.468      SEARCHEFF_zHOST_FILE $PLASTICC_ROOT/SIMGEN/SEARCHEFF_zHOST_PLASTICC_WFD.DAT` in the  
 `SIMGEN_MASTER_LSST_WFD.INPUT` file. 
 
-After this, we should got to  the pathtodir, 
+
+If the script is run with no provided arguments and the directory `./plasticc_sims_test` does not exist, this directory will be created with a copy of input files for `kraken_2026` cadences.
+## Launching the SNANA jobs
+
+After this, we should go to the pathtodir, 
 ```
 cd /project/rkessler/SURVEYS/LSST/USERS/CWP/kraken_2026
 sim_SNmix.pl SIMGEN_MASTER_LSST_WFD.INPUT FAST100
