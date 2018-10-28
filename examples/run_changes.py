@@ -39,7 +39,7 @@ if __name__ == '__main__':
     copy_template_to(loc)
 
     # Modify `SIMGEN_TEMPLATE_LSST.INPUT`  : CURRENT NEED : IGNORE (read below for detailed explanation)
-    ## What needs to be changed: (the range of peakmjd needs to match the simlib range
+    ## What needs to be changed: (the range of peakmjd needs to match the simlib range, and SIMLIB_MKSOPT
     ## Note this is different between minion and later versions for example.
     ## The latest versions of opsim are all the same, so changing CWP simlibs, we don't have to do anything
     ## Keys to change : 
@@ -47,6 +47,13 @@ if __name__ == '__main__':
     ### GENRANGE_PEAKMJD:  59782 63577   # PEAKMJD cut is wider to catch rise time, making -60, + 75 from prev
     ### Proposed solution : Change SIMGEN_TEMPLATE_LSST_INPUT to values suitable for CWP
     ### Add method to handle such changes automatically  later. 
+    template_file = os.path.join(loc, 'SIMGEN_TEMPLATE_LSST.INPUT')
+    with open(template_file, 'r') as f:
+        data = f.read()
+    data = data.replace('SIMLIB_MSKOPT:   256  # write every survey observation',
+                        'SIMLIB_MSKOPT:   128  # write every observation in seasons overlapping LC')
+    with open(template_file, 'w') as g:
+        g.writelines(data)
 
 
     # Modify `SIMGEN_MASTER_XXX.INPUT` : CURRENT NEED (some of these changes) 
@@ -82,8 +89,6 @@ if __name__ == '__main__':
     with open(templatefile, 'r') as f:
         data = f.read()
     data = data.replace('SIMLIB_PATH', wfd_simlib_path)
-    # data = data.replace('SIMLIB_MSKOPT:   256  # write every survey observation',
-    #                    'SIMLIB_MSKOPT:   128  # write every observation in seasons overlapping LC')
     with open(templatefile, 'w') as f:
         f.writelines(data)
 
