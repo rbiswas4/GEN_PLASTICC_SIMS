@@ -33,6 +33,8 @@ if __name__ == '__main__':
     wfd_simlib_path = args.wfd_simlibpath
     ddf_simlib_path = args.ddf_simlibpath
 
+    # Check that the simlib paths exist
+
     # copy the template to pathdir
     copy_template_to(loc)
 
@@ -71,11 +73,17 @@ if __name__ == '__main__':
     execute_bashscript(bash_script, loc=loc)
 
 
-    # Change the solid angle in the WFD and DDF inputs (alternatively, we could have changed them in the bash script)
+    # Check if WFD file exists and is non-empty
     templatefile = os.path.join(loc, 'SIMGEN_MASTER_LSST_WFD.INPUT')
+    assert os.path.exists(templatefile)
+    assert os.stat(templatefile).st_size > 0
+
+    # Change the solid angle in the WFD and DDF inputs (alternatively, we could have changed them in the bash script)
     with open(templatefile, 'r') as f:
         data = f.read()
     data = data.replace('SIMLIB_PATH', wfd_simlib_path)
+    # data = data.replace('SIMLIB_MSKOPT:   256  # write every survey observation',
+    #                    'SIMLIB_MSKOPT:   128  # write every observation in seasons overlapping LC')
     with open(templatefile, 'w') as f:
         f.writelines(data)
 
@@ -84,7 +92,7 @@ if __name__ == '__main__':
     with open(templatefile, 'r') as f:
         data = f.read()
     data = data.replace('SIMLIB_PATH', ddf_simlib_path)
-    data = data.replace('SIMLIB_MSKOPT:   256  # write every survey observation',
-                        'SIMLIB_MSKOPT:   128  # write every observation in seasons overlapping LC')
+    # data = data.replace('SIMLIB_MSKOPT:   256  # write every survey observation',
+    #                    'SIMLIB_MSKOPT:   128  # write every observation in seasons overlapping LC')
     with open(templatefile, 'w') as f:
         f.writelines(data)

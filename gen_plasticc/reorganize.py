@@ -9,6 +9,13 @@ import subprocess
 
 def execute_bashscript(script, loc=None):
     """
+    executes a bash script in loc and then returns to the directory
+    where it was before running the script efectively doing
+
+    cd loc
+    bash script
+    cd olddir
+    p
     Parameters
     ---------
     script : string, mandatory
