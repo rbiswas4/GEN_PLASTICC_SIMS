@@ -2,6 +2,7 @@ import os
 from argparse import ArgumentParser
 from  gen_plasticc import copy_template_to, execute_bashscript
 import gen_plasticc
+import numpy as np
 
 
 
@@ -27,6 +28,7 @@ if __name__ == '__main__':
                         default='/project/rkessler/SURVEYS/LSST/ROOT/simlibs/cwp/kraken_2026_ddf.simlib.COADD')
     parser.add_argument('--no_use_minseason', dest='no_use_minseason', help='if provided any constriant on min_seasons will be skipped', action="store_true", default=False)
 
+    parser.add_argument('--rarifyIaBy', help='a number to decrease abundance of Ia or model 11  by, defaults to 100', default=100, type=float)
 
     args = parser.parse_args()
     loc = args.pathtodir
@@ -36,11 +38,23 @@ if __name__ == '__main__':
     skip_minseason_key = args.no_use_minseason
 
     print('skip_minseason_key', skip_minseason_key)
+    rarify_factor = args.rarifyIaBy
 
     # Check that the simlib paths exist
 
     # copy the template to pathdir
     copy_template_to(loc)
+
+
+    # Modify `SIMGEN_INCLUDE_SALT2.INPUT`
+    # CURRENT NEED: rarify by a number
+    template_file = os.path.join(loc, 'SIMGEN_INCLUDE_SALT2.INPUT')
+    with open(template_file, 'r') as f:
+        data = f.read()
+    data = data.replace('2.5E-5', '{:1.1E}'.format(np.float('2.5E-5')/rarify_factor))
+    data = data.replace('9.7E-5', '{:1.1E}'.format(np.float('9.7E-5')/rarify_factor))
+    with open(template_file, 'w') as g:
+        g.writelines(data)
 
     # Modify `SIMGEN_TEMPLATE_LSST.INPUT`  : CURRENT NEED : IGNORE (read below for detailed explanation)
     ## What needs to be changed: (the range of peakmjd needs to match the simlib range, and SIMLIB_MKSOPT
