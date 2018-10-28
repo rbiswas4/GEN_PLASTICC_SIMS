@@ -3,6 +3,11 @@
 This repository puts together some tools preparing inputs for SNANA simulations of PLASTICC. It is available in a [private repository](https://github.com/rbiswas4/GEN_PLASTICC_SIMS) (only to keep plasticc information secret during the kaggle challenge) and installed on midway at `/project/rkessler/SURVEYS/LSST/USERS/CWP/PLASTICC_GEN`. 
 # INSTALL
 
+Note that for the faster CWP sims, where we are suppressing SNIa by a factor of 100., we will want to use the branch
+```
+git pull Issue/1/faster_sims
+git checkout Issue/1/faster_sims
+```
 In the top level run
 
 ```
