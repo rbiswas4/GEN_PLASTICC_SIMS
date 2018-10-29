@@ -24,7 +24,7 @@ python run_changes.py -h
 ```
 As an example, I ran
 ```
-python run_changes.py --pathtodir /project/rkessler/SURVEYS/LSST/USERS/CWP/kraken_2026 --wfd_simlibpath /project/rkessler/SURVEYS/LSST/ROOT/simlibs/cwp/kraken_2026_wfd.simlib.COADD --ddf_simlibpath /project/rkessler/SURVEYS/LSST/ROOT/simlibs/cwp/kraken_2026_ddf.simlib.COADD --opsimname kraken_2026
+python run_changes.py --pathtodir /project/rkessler/SURVEYS/LSST/USERS/CWP/kraken_2026 --wfd_simlibpath /project/rkessler/SURVEYS/LSST/ROOT/simlibs/cwp/kraken_2026_wfd.simlib.COADD --ddf_simlibpath /project/rkessler/SURVEYS/LSST/ROOT/simlibs/cwp/kraken_2026_ddf.simlib.COADD --opsimname kraken_2026 --no_use_minseaso
 ```
 This works in the following way:
 `--pathtodir` argument creates the directory  `/project/rkessler/SURVEYS/LSST/USERS/CWP/kraken_2026` where the inputs will be placed.

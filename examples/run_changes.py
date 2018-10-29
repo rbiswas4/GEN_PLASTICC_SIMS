@@ -25,6 +25,7 @@ if __name__ == '__main__':
                         default='/project/rkessler/SURVEYS/LSST/ROOT/simlibs/cwp/kraken_2026_wfd.simlib.COADD')
     parser.add_argument('--ddf_simlibpath', type=str, help='absolute path to the ddf simlib', 
                         default='/project/rkessler/SURVEYS/LSST/ROOT/simlibs/cwp/kraken_2026_ddf.simlib.COADD')
+    parser.add_argument('--no_use_minseason', dest='no_use_minseason', help='if provided any constriant on min_seasons will be skipped', action="store_true", default=False)
 
 
     args = parser.parse_args()
@@ -32,6 +33,9 @@ if __name__ == '__main__':
     opsimname = args.opsimname
     wfd_simlib_path = args.wfd_simlibpath
     ddf_simlib_path = args.ddf_simlibpath
+    skip_minseason_key = args.no_use_minseason
+
+    print('skip_minseason_key', skip_minseason_key)
 
     # Check that the simlib paths exist
 
@@ -53,7 +57,19 @@ if __name__ == '__main__':
     data = data.replace('SIMLIB_MSKOPT:   256  # write every survey observation',
                         'SIMLIB_MSKOPT:   128  # write every observation in seasons overlapping LC')
     with open(template_file, 'w') as g:
-        g.writelines(data)
+        for line in data.split('\n'):
+            if skip_minseason_key:
+                print('simlib key on')
+	        if  'SIMLIB_MINSEASON' in line:
+                    print('found line with minseason key')
+	        else:
+                    g.write(line)
+                    g.write('\n')
+                 
+
+	    else:
+                 g.write(line)
+                 g.write('\n')
 
 
     # Modify `SIMGEN_MASTER_XXX.INPUT` : CURRENT NEED (some of these changes) 
