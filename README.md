@@ -15,6 +15,8 @@ python setup.py install --user
 ```
 
 ## HOW to RUN gen_plasticc scripts to create the appropriate SNANA inputs:
+
+### Creating Inputs
 Currently, there is a script in the directory `examples` 
 `examples/run_changes.py` 
 To obtain the inputs do 
@@ -30,6 +32,7 @@ This works in the following way:
 `--pathtodir` argument creates the directory  `/project/rkessler/SURVEYS/LSST/USERS/CWP/kraken_2026` where the inputs will be placed.
 `--opsimname` is a string to describe the cadence strategy,  eg. `kraken_2026`. This is used to replace the GENVERSION name to reflect this cadence.
 
+### Change area
 
 Currently, there is an unfortunate step required, putting in the solid angle by hand. (This will be changed later, if someone would like to do so (great!), please talk to @rbiswas4 first). One should look at the header of the simlib file which will include the sky area in solid angles. This should be used to replace a line like:
 `GENOPT_GLOBAL: SIMLIB_FILE /project/rkessler/SURVEYS/LSST/ROOT/simlibs/cwp/kraken_2026_wfd.simlib.COADD SOLID_ANGLE 5.468      SEARCHEFF_zHOST_FILE $PLASTICC_ROOT/SIMGEN/SEARCHEFF_zHOST_PLASTICC_WFD.DAT` in the  
@@ -39,6 +42,7 @@ Currently, there is an unfortunate step required, putting in the solid angle by 
 If the script is run with no provided arguments and the directory `./plasticc_sims_test` does not exist, this directory will be created with a copy of input files for `kraken_2026` cadences.
 ## Launching the SNANA jobs
 
+### FAST100 : Check runs do not crash
 After this, we should go to the pathtodir, 
 ```
 cd /project/rkessler/SURVEYS/LSST/USERS/CWP/kraken_2026
@@ -49,10 +53,24 @@ The results should be in
 $SCRATCH_SIMDIR/CWP/
 ```
 If this runs correctly, we should run this with 
+### Full : run with WFD and DDF (except where DDFs don't exist)
 ```
 sim_SNmix.pl SIMGEN_MASTER_LSST_WFD.INPUT
 ```
 At the end of the run, all output should be collected from the ouptut directory and put into a suitabe folder
+
+### Move to folder
+
+If your run ended correctly, you will have directories of the form 
+`LSST_WFD_opsimname_MODELXY` in `$SCRATCH_SIMDIR/CWP`. and no `TMP_abcd*` where abcd are the first four characters of your username.  Check this is the case. I believe there should be 21 directories.
+
+Now create a directory is `$SCRATCH_SIMDIR/CWP`.
+```
+cd $SCRATCH_SIMDIR/CWP
+mkdir opsimname
+mv LSST_WFD_opsimname_MODEL* opsimname
+# mv LSST_DDF_opsimname_MODEL* opsimname # If running DDF too
+```
 ## TO BE CHECKED LATER
 
 # INPUT FILES FOR SNANA simulations of PLAsTiCC.
